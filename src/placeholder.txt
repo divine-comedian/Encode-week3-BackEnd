@@ -1,0 +1,22 @@
+async requestTokens(body: any) {
+    const wallet = new ethers.Wallet(process.env.PRIVATE_KEY ?? '');
+    const signer = wallet.connect(this.provider);
+    //define ballot contract
+    const ballotContract = this.ballotContractFactory
+      .attach(ballotAddress)
+      .connect(signer);
+    // giveRightToVote
+    const giveRightToVote = await ballotContract.giveRightToVote(body.address);
+    await giveRightToVote.wait();
+    // define erc20Contract
+    const erc20Contract = this.erc20ContractFactory
+      .attach(tokenAddress)
+      .connect(signer);
+    // mint tokens here
+    const mintTokens = await erc20Contract.mint(body.address, mintAmount);
+    console.log(
+      `Tokens minted successfully to ${body.address}, the transaction can be found at ${mintTokens}`,
+    );
+    // delegate tokens on ballot
+    return mintTokens.wait();
+  }
