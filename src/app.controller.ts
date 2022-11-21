@@ -1,5 +1,11 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
+import { BigNumber } from 'ethers';
 import { AppService } from './app.service';
+
+export class mintDto {
+  address: string;
+  amount: string;
+}
 
 @Controller()
 export class AppController {
@@ -10,7 +16,7 @@ export class AppController {
     return { result: this.appService.getTokenAddress() };
   }
   @Post('request-tokens')
-  async requestTokens(@Body() body: any): Promise<any> {
-    return { result: this.appService.requestTokens(body) };
+  async requestTokens(@Body() body: mintDto): Promise<any> {
+    return await this.appService.requestTokens(body);
   }
 }
