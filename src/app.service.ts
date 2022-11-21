@@ -39,8 +39,21 @@ export class AppService {
     //  console.log(signer);
     //  console.log(this.tokenizedVote);
   }
-  getProposals() {
-    return this.proposals;
+  async getProposals() {
+    const ballotContract = this.ballotContractFactory
+      .attach(ballotAddress)
+      .connect(this.provider);
+    async function viewProposals(numberOfProposals: number) {
+      const proposalNames = [];
+      for (let i = 0; i <= numberOfProposals - 1; i++) {
+        let proposalName = await ballotContract.proposals(i);
+        proposalName = ethers.utils.parseBytes32String(proposalName.name);
+        proposalNames.push(proposalName);
+      }
+      return proposalNames;
+    }
+    const proposals = viewProposals(3);
+    return proposals;
   }
   getTokenAddress() {
     return tokenAddress;

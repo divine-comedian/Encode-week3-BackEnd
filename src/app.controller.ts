@@ -10,7 +10,10 @@ export class mintDto {
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
-
+  @Get('proposals')
+  getProposals() {
+    return this.appService.getProposals();
+  }
   @Get('token-address')
   getTokenAddress() {
     return { result: this.appService.getTokenAddress() };
